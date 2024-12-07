@@ -38,9 +38,10 @@ class CROHMEVocab:
 
 
 vocab = CROHMEVocab()
+vocab.init("E:/Desktop/github/ICAL/data/crohme/dictionary.txt")
 
 if __name__ == '__main__':
-    vocab.init('./data/hme100k/dictionary.txt')
+    vocab.init('E:/Desktop/github/ICAL/data/crohme/dictionary.txt')
     print(len(vocab))
     print(vocab.word2idx['<space>'])
     print(vocab.word2idx['{'], vocab.word2idx['}'],
