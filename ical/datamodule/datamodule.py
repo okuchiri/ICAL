@@ -75,31 +75,53 @@ def data_iterator(
     return list(zip(fname_total, feature_total, label_total))
 
 
-def extract_data(folder: str, dir_name: str) -> Data:
-    """Extract all data need for a dataset from zip archive
-
-    Args:
-        archive (ZipFile):
-        dir_name (str): dir name in archive zip (eg: train, test_2014......)
-
-    Returns:
-        Data: list of tuple of image and formula
+def extract_data(archive:str, pkl_folder: str) -> Data:
     """
-    with open(os.path.join(folder, dir_name, "images.pkl"), "rb") as f:
-        images = pickle.load(f)
-    with open(os.path.join(folder, dir_name, "caption.txt"), "r") as f:
-        captions = f.readlines()
-    data = []
-    for line in captions:
-        tmp = line.strip().split()
-        img_name = tmp[0]
-        formula = tmp[1:]
-        img = images[img_name]
-        data.append((img_name, img, formula))
+        Args:
+            pkl_folder (str): 存储 .pkl 文件的文件夹路径。
 
-    print(f"Extract data from: {dir_name}, with data size: {len(data)}")
+        Returns:
+            list: 包含所有数据的列表，每个元素为 (img_ID, image, label) 的元组。
+        """
+    data = []  # 用于存储最终的结果
+    folder = archive + pkl_folder
+    print(folder)
+    # 遍历文件夹中的所有 .pkl 文件
+    for file_name in os.listdir(folder):
+        if file_name.endswith(".pkl"):  # 只处理 .pkl 文件
+            file_path = os.path.join(folder, file_name)
+            # 加载 .pkl 文件内容
+            with open(file_path, "rb") as f:
+                content = pickle.load(f)  # 每个 .pkl 文件是一个列表，列表内是字典
+
+            # 提取每个字典中的 ID, image, label
+            data.extend(content)
 
     return data
+    #"""Extract all data need for a dataset from zip archive
+
+    #Args:
+    #    archive (ZipFile):
+    #    dir_name (str): dir name in archive zip (eg: train, test_2014......)
+
+    #Returns:
+    #    Data: list of tuple of image and formula
+    #"""
+    #with open(os.path.join(folder, dir_name, "images.pkl"), "rb") as f:
+    #    images = pickle.load(f)
+    #with open(os.path.join(folder, dir_name, "caption.txt"), "r") as f:
+    #    captions = f.readlines()
+    #data = []
+    #for line in captions:
+    #    tmp = line.strip().split()
+    #    img_name = tmp[0]
+    #    formula = tmp[1:]
+    #    img = images[img_name]
+    #    data.append((img_name, img, formula))
+
+    #print(f"Extract data from: {dir_name}, with data size: {len(data)}")
+
+    #return data
 
 
 @dataclass
@@ -146,15 +168,15 @@ def collate_fn(batch):
 
 
 def build_dataset(archive, folder: str, batch_size: int, max_size: int, is_train: bool):
-    data = extract_data(archive, folder)
+    data = extract_data(archive,folder)
     return data_iterator(data, batch_size, max_size, is_train)
 
 
 class HMEDatamodule(pl.LightningDataModule):
     def __init__(
         self,
-        folder: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data/crohme",
-        test_folder: str = "2014",
+        folder: str = f"{os.path.dirname(os.path.realpath(__file__))}/../../data",
+        test_folder: str = "eval",
         max_size: int = 32e4,
         scale_to_limit: bool = True,
         train_batch_size: int = 8,
@@ -169,11 +191,11 @@ class HMEDatamodule(pl.LightningDataModule):
         self.max_size = max_size
         self.scale_to_limit = scale_to_limit
         self.train_batch_size = train_batch_size
-        self.eval_batch_size = eval_batch_size
+        self.eval_batch_size = 1
         self.num_workers = num_workers
         self.scale_aug = scale_aug
 
-        vocab.init(os.path.join(folder, "dictionary.txt"))
+        vocab.init("D:/ICAL/vocab.txt")
 
         print(f"Load data from: {self.folder}")
 

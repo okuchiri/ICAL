@@ -24,6 +24,7 @@ class CROHMEVocab:
             v: k for k, v in self.word2idx.items()}
 
     def words2indices(self, words: List[str]) -> List[int]:
+        print(words)
         return [self.word2idx[w] for w in words]
 
     def indices2words(self, id_list: List[int]) -> List[str]:
@@ -38,10 +39,10 @@ class CROHMEVocab:
 
 
 vocab = CROHMEVocab()
-vocab.init("E:/Desktop/github/ICAL/data/crohme/dictionary.txt")
+vocab.init("D:/ICAL/vocab.txt")
 
 if __name__ == '__main__':
-    vocab.init('E:/Desktop/github/ICAL/data/crohme/dictionary.txt')
+    vocab.init('D:/ICAL/data/dictionary.txt')
     print(len(vocab))
     print(vocab.word2idx['<space>'])
     print(vocab.word2idx['{'], vocab.word2idx['}'],
