@@ -198,7 +198,7 @@ class HMEDatamodule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.scale_aug = scale_aug
 
-        vocab.init("E:/Desktop/github/ICAL/data/mydata/vocab.txt")
+        vocab.init("../../data/mydata/vocab.txt")
 
         print(f"Load data from: {self.folder}")
 
