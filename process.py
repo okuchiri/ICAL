@@ -8,10 +8,10 @@ from PIL import Image
 from tqdm import tqdm
 
 # 设置路径变量
-input_label_dir = Path('labels')
-image_dir = Path('image')
-output_dir = Path('data/train/pkls')
-vocab_file = Path('vocab.txt')
+input_label_dir = Path('data/mydata/labels')
+image_dir = Path('data/mydata/images')
+output_dir = Path('data/mydata/all_pkls')
+vocab_file = Path('data/mydata/vocab.txt')
 
 # 创建输出目录
 output_dir.mkdir(parents = True, exist_ok = True)

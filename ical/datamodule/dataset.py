@@ -2,7 +2,7 @@ import torchvision.transforms as tr
 from torch.utils.data.dataset import Dataset
 
 from .transforms import ScaleAugmentation, ScaleToLimitRange
-
+import torch
 K_MIN = 0.7
 K_MAX = 1.4
 
@@ -33,9 +33,12 @@ class HMEDataset(Dataset):
 
     def __getitem__(self, idx):
         fname, img, caption = self.ds[idx]
-
+        # caption = [[] for i in range(len(img))]
         img = [self.transform(im) for im in img]
+        # img = []
 
+        # for i in range(1):
+        #     img.append(torch.FloatTensor(1, 64, 64))
         return fname, img, caption
 
     def __len__(self):

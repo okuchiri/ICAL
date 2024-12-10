@@ -9,7 +9,30 @@ from ical.utils.utils import Hypothesis
 from .decoder import Decoder
 from .encoder import Encoder
 
+from ptflops import get_model_complexity_info
+def test_encoder(model, img, img_mask):
+    def encoder_input(resolution):
+        return dict(img = img, img_mask = img_mask)
+    with torch.cuda.device(0):
+        macs, params = get_model_complexity_info(model.cuda(),
+                                                 (1, 64, 64),
+                                                 as_strings = True,
+                                                 print_per_layer_stat = False,
+                                                 input_constructor = encoder_input)
+    print('{:<30} {:<8}'.format('Computational complexity: ', macs))
+    print('{:<30} {:<8}'.format('Number of parameters: ', params))
 
+def test_decoder(model, feature, mask, tgt):
+    def decoder_input(resolution):
+        return dict(src = feature, src_mask = mask, tgt = tgt)
+    with torch.cuda.device(0):
+        macs, params = get_model_complexity_info(model.cuda(),
+                                                 (1, 64, 64),
+                                                 as_strings = True,
+                                                 print_per_layer_stat = False,
+                                                 input_constructor = decoder_input)
+    print('{:<30} {:<8}'.format('Computational complexity: ', macs))
+    print('{:<30} {:<8}'.format('Number of parameters: ', params))
 class ICAL(pl.LightningModule):
     def __init__(
         self,
@@ -61,10 +84,13 @@ class ICAL(pl.LightningModule):
         FloatTensor
             [2b, l, vocab_size]
         """
+
+        # test_encoder(self.encoder, img, img_mask)
         feature, mask = self.encoder(img, img_mask)  # [b, t, d]
         feature = torch.cat((feature, feature), dim=0)  # [2b, t, d]
         mask = torch.cat((mask, mask), dim=0)
 
+        # test_decoder(self.decoder, feature, mask, tgt)
         exp_out, imp_out, fusion_out = self.decoder(feature, mask, tgt)
 
         return exp_out, imp_out, fusion_out

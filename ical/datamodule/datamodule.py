@@ -66,7 +66,6 @@ def data_iterator(
                 feature_batch.append(fea)
                 label_batch.append(lab)
                 i += 1
-
     # last batch
     fname_total.append(fname_batch)
     feature_total.append(feature_batch)
@@ -94,8 +93,12 @@ def extract_data(archive:str, pkl_folder: str) -> Data:
             with open(file_path, "rb") as f:
                 content = pickle.load(f)  # 每个 .pkl 文件是一个列表，列表内是字典
 
+            for ID, image, caption in content:
+                caption = caption.strip().split()
+                data.append((ID, image, caption))
+
             # 提取每个字典中的 ID, image, label
-            data.extend(content)
+            # data.extend(content)
 
     return data
     #"""Extract all data need for a dataset from zip archive
@@ -191,11 +194,11 @@ class HMEDatamodule(pl.LightningDataModule):
         self.max_size = max_size
         self.scale_to_limit = scale_to_limit
         self.train_batch_size = train_batch_size
-        self.eval_batch_size = 1
+        self.eval_batch_size = eval_batch_size
         self.num_workers = num_workers
         self.scale_aug = scale_aug
 
-        vocab.init("D:/ICAL/vocab.txt")
+        vocab.init("E:/Desktop/github/ICAL/data/mydata/vocab.txt")
 
         print(f"Load data from: {self.folder}")
 

@@ -48,7 +48,7 @@ def split_list(data, train_ratio = 0.9, seed = None):
 
 def data_divide(all_data, train_ratio = 0.9, seed = 42):
     trainlist, validlist = split_list(all_data, train_ratio=train_ratio, seed=seed)
-    list_to_pkl(trainlist, "data/train", 10000)
-    list_to_pkl(validlist, "data/eval", 10000)
+    list_to_pkl(trainlist, "data/mydata/train", 10000)
+    list_to_pkl(validlist, "data/mydata/eval", 10000)
 
-data_divide(load_pkl("pkls"))
+data_divide(load_pkl("data/mydata/all_pkls"))

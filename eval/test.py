@@ -14,7 +14,7 @@ def main(
     folder: str, version: str, test_year: str, max_size: int, scale_to_limit: bool
 ):
     ckp_folder = os.path.join(
-        "lightning_logs", f"version_{version}", "checkpoints")
+        "..\lightning_logs", f"version_{version}", "checkpoints")
     fnames = os.listdir(ckp_folder)
     assert len(fnames) == 1
     ckp_path = os.path.join(ckp_folder, fnames[0])
@@ -68,4 +68,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    main("../data/crohme", version = "0", test_year = "2014", max_size = 320000, scale_to_limit = True)

@@ -39,7 +39,7 @@ class CROHMEVocab:
 
 
 vocab = CROHMEVocab()
-vocab.init("D:/ICAL/vocab.txt")
+vocab.init("E:/Desktop/github/ICAL/data/mydata/vocab.txt")
 
 if __name__ == '__main__':
     vocab.init('D:/ICAL/data/dictionary.txt')
